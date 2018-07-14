@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head><title>Prayer Times Reminder</title></head>
+  <body>
+    <!-- Button to check if it's prayer time or not. Can be styled. -->
+    <button onclick="isPrayerTime() ? alert('YES!') : alert('Not yet!'); ">Get Prayer Times</button>
+    <button id="getPosts">Get Posts</button>
+
+  </body>
+  <script type="application/javascript">
+
+// just added this section to fetch for prayer times via click
+  document.getElementById('getPosts').addEventListener('click', getPosts);
+    function getPosts() {
+      fetch("http://api.aladhan.com/v1/calendar?latitude=51.508515&longitude=-0.1254872&method=2&month=7&year=2018")
+        .then((res) => res.json())
+        .then((data) => {
+          let output = '';
+         // let output = `<h3>posts</h3>`;
+          let todayDate = '';
+          data.data.forEach(function(post) {
+              const currDate = new Date();
+              if(parseInt(post.date.gregorian.day) === currDate.getDate()) {
+                todayDate = post.date.readable;
+                output += '<div><ul>';
+                  console.log(post.timings);
+                    for(let event in post.timings) {
+                      output += `<li>${event}: ${post.timings[event]}</li>`
+                    };
+                  output += '</ul>';
+                 // <h3>${JSON.stringify(post.timings)}</h3>
+                  //<p>${JSON.stringify(post.date)}</p>
+                  //</div>
+                //`;
+                return;
+              }
+          });
+          if(todayDate !== '') {
+            output = `<h3>posts for ${todayDate}</h3>` + output;
+          }
+          document.getElementById("output").innerHTML = output;
+        })
+    }
+    
+
+//converted xhttp to fetch api call
+    fetch("http://api.aladhan.com/v1/calendar?latitude=51.508515&longitude=-0.1254872&method=2&month=4&year=2017")
+        .then((response) => {
+        return response.json();
+        })
+        .then((myJson) => {
+         return (myJson);
+            })
+        .catch((error) => {
+            throw error
+        });
+
+    let alerted = false;
+
+// added more acorutae timing as arrys nested under objects
+// // Keep track of prayer times by keeping a pair of [hour, minute]
+// // This is based on local time if I am not mistaking. 24 hour format.
+   
+      let prayerTimes = {
+        Fajr: [4, 19],
+        SunRise: [5, 47],
+        Dhur: [13, 19],
+        Asr: [17,05],
+        Maghrib: [20, 36],
+        Isha: [24, 06],
+      }
+      function isPrayerTime() {
+        const d = new Date();
+        for(let event in prayerTimes) {
+          if(prayerTimes[event][0] == d.getHours() && prayerTimes[event][1] == d.getMinutes()) {
+            return true;
+          }
+        }
+        
+        return false;
+      }
+      setInterval(function() {
+      const d = new Date();
+      const prayerTimes = {
+        // Fajr: [4, 19],
+        // SunRise: [5, 47],
+        // Dhur: [13, 19],
+        // Asr: [17,05],
+        // Maghrib: [20, 36],
+        // Isha: [24, 06],
+      }
+      console.log('Checking');
+      if(isPrayerTime() && !alerted) {
+        alert("It's go time");
+        // This is used to ensure that the user doesn't
+        // get alerted every seco
+        alerted = true;
+        // Re-enable the alerting after 1 minute.
+        setTimeout(function() {
+          alerted = false;
+        }, 60000);
+      }
+    }, 1000)
+
+  </script>
+
+  <div id="output"></div>
+</html>
+
+
