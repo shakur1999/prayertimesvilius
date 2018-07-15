@@ -9,7 +9,7 @@
   </body>
   <script type="application/javascript">
 
-// just added this section to fetch for prayer times via click
+// added this section to fetch for prayer times via click
   document.getElementById('getPosts').addEventListener('click', getPosts);
     function getPosts() {
       fetch("http://api.aladhan.com/v1/calendar?latitude=51.508515&longitude=-0.1254872&method=2&month=7&year=2018")
@@ -62,12 +62,12 @@
 // // This is based on local time if I am not mistaking. 24 hour format.
    
       let prayerTimes = {
-        Fajr: [4, 19],
-        SunRise: [5, 47],
-        Dhur: [13, 19],
-        Asr: [17,05],
-        Maghrib: [20, 36],
-        Isha: [24, 06],
+        // Fajr: [4, 19],
+        // SunRise: [5, 47],
+        // Dhur: [13, 19],
+        // Asr: [17,05],
+        // Maghrib: [20, 36],
+        // Isha: [24, 06],
       }
       function isPrayerTime() {
         const d = new Date();
